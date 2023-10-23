@@ -1,0 +1,163 @@
+El hook principal de React useState se utiliza para agregar estado a componentes funcionales en React. Permite que un componente funcional mantenga y actualice su estado interno. El estado es una manera de almacenar datos que pueden cambiar con el tiempo y que afectan la representación visual del componente.
+import React, { useState } from 'react';
+
+function Contador() {
+  // El useState inicializa el estado del contador en 0.
+  const [contador, setContador] = useState(0);
+
+  // Funciones para aumentar y disminuir el contador.
+  const incrementar = () => {
+    setContador(contador + 1);
+  };
+
+  const disminuir = () => {
+    setContador(contador - 1);
+  };
+
+  return (
+    <div>
+      <p>Contador: {contador}</p>
+      <button onClick={incrementar}>Incrementar</button>
+      <button onClick={disminuir}>Disminuir</button>
+    </div>
+  );
+}
+
+export default Contador;
+En este ejemplo, useState se utiliza para crear una variable de estado llamada contador que comienza en 0. La función setContador se utiliza para actualizar el valor de contador cuando se hace clic en los botones "Incrementar" o "Disminuir". Cuando setContador se llama con un nuevo valor, React se encarga de volver a renderizar el componente con el nuevo valor de contador, lo que resulta en una actualización en la interfaz de usuario.
+
+
+En resumen, useState se utiliza para agregar y gestionar el estado local en componentes funcionales de React, permitiendo que los componentes respondan a cambios en los datos y se vuelvan a renderizar cuando sea necesario. Es fundamental para construir componentes interactivos y dinámicos en aplicaciones de React.
+
+
+useState se utiliza para mantener el estado local de un componente funcional y, cuando cambia, provoca una nueva renderización del componente. Es decir, cuando actualizas el estado con useState, React vuelve a renderizar el componente para reflejar el nuevo estado.
+
+useRef, por otro lado, se utiliza para crear una referencia mutable que puede apuntar a elementos del DOM o cualquier otro valor mutable. La actualización de una referencia con useRef no provoca una renderización del componente. Las actualizaciones de useRef son "mutables" y no afectan el ciclo de renderizado del componente.
+
+Aquí tienes un ejemplo que ilustra la diferencia:
+
+import React, { useState, useRef, useEffect } from 'react';
+
+function Example() {
+  const [contador, setContador] = useState(0);
+  const refContador = useRef(0);
+
+  const incrementarContador = () => {
+    setContador(contador + 1); // Actualización de estado
+    refContador.current += 1; // Actualización de referencia
+  };
+
+  useEffect(() => {
+    console.log("Renderización del componente");
+  });
+
+  return (
+    <div>
+      <p>Estado del contador: {contador}</p>
+      <p>Referencia del contador: {refContador.current}</p>
+      <button onClick={incrementarContador}>Incrementar</button>
+    </div>
+  );
+}
+
+export default Example;
+
+import React, { useState, useEffect } from 'react';
+
+function App() {
+  return (
+    <div className="App">
+      <h1>Aplicación de Puntaje en Truco</h1>
+      <Game />
+    </div>
+  );
+}
+
+function Game() {
+  const [puntajeMaximo, setPuntajeMaximo] = useState(null);
+  const [equipo1Puntaje, setEquipo1Puntaje] = useState(0);
+  const [equipo2Puntaje, setEquipo2Puntaje] = useState(0);
+  const [inputPuntaje, setInputPuntaje] = useState('');
+  const [mensajeError, setMensajeError] = useState('');
+
+  const handleInputChange = (event) => {
+    setInputPuntaje(event.target.value);
+  };
+
+  const handleValidacion = () => {
+    const puntaje = parseInt(inputPuntaje);
+    if (puntaje < 18 || puntaje > 30 || isNaN(puntaje)) {
+      setMensajeError('Valor inválido. Ingrese un valor entre 18 y 30.');
+    } else {
+      setPuntajeMaximo(puntaje);
+      setInputPuntaje('');
+    }
+  };
+
+  const handlePuntajeEquipo1 = () => {
+    if (equipo1Puntaje < puntajeMaximo) {
+      setEquipo1Puntaje(equipo1Puntaje + 1);
+    }
+    checkGanador();
+  };
+
+  const handlePuntajeEquipo2 = () => {
+    if (equipo2Puntaje < puntajeMaximo) {
+      setEquipo2Puntaje(equipo2Puntaje + 1);
+    }
+    checkGanador();
+  };
+
+  const checkGanador = () => {
+    if (equipo1Puntaje === puntajeMaximo || equipo2Puntaje === puntajeMaximo) {
+      alert('¡Tenemos un ganador!');
+      setEquipo1Puntaje(0);
+      setEquipo2Puntaje(0);
+    }
+  };
+
+  useEffect(() => {
+    setMensajeError('');
+  }, [inputPuntaje]);
+
+  return (
+    <div>
+      <h2>Puntaje Máximo: {puntajeMaximo || 'No definido'}</h2>
+      <input
+        type="text"
+        placeholder="Ingrese el puntaje máximo"
+        value={inputPuntaje}
+        onChange={handleInputChange}
+      />
+      <button onClick={handleValidacion}>Establecer Puntaje Máximo</button>
+      {mensajeError && <p>{mensajeError}</p>}
+      <div>
+        <button onClick={handlePuntajeEquipo1}>Equipo 1 +1</button>
+        <p>Equipo 1: {equipo1Puntaje}</p>
+      </div>
+      <div>
+        <button onClick={handlePuntajeEquipo2}>Equipo 2 +1</button>
+        <p>Equipo 2: {equipo2Puntaje}</p>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+
+Realizar una aplicación para manejar el puntaje en un partido de truco. Esta deberá cumplir con los siguientes requisitos: 
+Un input para poder ingresar el valor de finalización del partido.
+Un botón para comprobar si el valor ingresado es válido.
+Dos botones para poder aumentar el puntaje de cada equipo.
+Todo el tiempo se tiene que ver de alguna manera el puntaje actual de ambos equipos.
+Cuando algún equipo llega al puntaje máximo, informar de alguna manera y reiniciar ambos contadores.
+
+Además, se deberá validar que el usuario no ingrese un valor negativo, un valor menor a 18 o mayor a 30. En caso de que ingrese un valor no permitido, informar al usuario que es un valor invalido y permitirle ingresar nuevamente.
+
+Recomendaciones: 
+Crear dos componentes.
+Usar useState para manejar los estados.
+Usar useRef para informar que ingreso un valor no válido.
+
+
+
