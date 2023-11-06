@@ -1,0 +1,69 @@
+useState:
+Este hook se utiliza para agregar estado a un componente funcional. Te permite declarar una variable de estado y una función para actualizarla. Por ejemplo:
+
+
+import React, { useState } from 'react';
+
+function Contador() {
+  const [count, setCount] = useState(0);
+
+  const increment = () => {
+    setCount(count + 1);
+  };
+
+  return (
+    <div>
+      <p>Contador: {count}</p>
+      <button onClick={increment}>Incrementar</button>
+    </div>
+  );
+}
+useEffect:
+Este hook se utiliza para realizar efectos secundarios en un componente funcional, como llamadas a API, suscripciones a eventos o actualizaciones del DOM. Por ejemplo:
+
+
+import React, { useState, useEffect } from 'react';
+
+function DatosEnTiempoReal() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    // Realizar una llamada a una API y actualizar los datos
+    fetch('https://api.example.com/data')
+      .then((response) => response.json())
+      .then((result) => {
+        setData(result);
+      });
+  }, []); // El segundo argumento (un array vacío) indica que se ejecuta solo una vez al montar el componente.
+
+  return (
+    <ul>
+      {data.map((item) => (
+        <li key={item.id}>{item.nombre}</li>
+      ))}
+    </ul>
+  );
+}
+useContext:
+Este hook permite acceder al contexto en un componente funcional. Puedes utilizarlo para compartir datos entre componentes sin necesidad de pasar props manualmente. Por ejemplo:
+
+
+import React, { useContext } from 'react';
+
+// Crear un contexto
+const MiContexto = React.createContext();
+
+function ComponenteHijo() {
+  const valor = useContext(MiContexto);
+
+  return <p>Valor del contexto: {valor}</p>;
+}
+
+function ComponentePadre() {
+  return (
+    <MiContexto.Provider value="Hola desde el contexto">
+      <ComponenteHijo />
+    </MiContexto.Provider>
+  );
+}
+Estos son solo algunos de los hooks más importantes en React. Hay otros, como useReducer y useRef, que proporcionan funcionalidades adicionales. Los hooks permiten gestionar el estado y el ciclo de vida en componentes funcionales de una manera más sencilla y efectiva.
